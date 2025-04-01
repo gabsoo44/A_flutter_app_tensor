@@ -1,73 +1,68 @@
+import 'package:a_flutter_app_tensor/models/telemetry_point.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import '../models/telemetry_point.dart';
 
+// Widget affichant un graphique des données de température et d’humidité
 class TelemetryChart extends StatelessWidget {
   final List<TelemetryPoint> points;
   final String unit;
 
+  // Le graphique prend une liste de points de télémétrie et une unité de température à afficher
   const TelemetryChart({required this.points, this.unit = "°C", super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<FlSpot> tempSpots = [];
-    List<FlSpot> humiditySpots = [];
+    final tempSpots = <FlSpot>[];      // Points pour la courbe de température
+    final humiditySpots = <FlSpot>[];  // Points pour la courbe d’humidité
 
-    for (int i = 0; i < points.length; i++) {
+    // On transforme chaque point de données en un FlSpot pour fl_chart
+    for (var i = 0; i < points.length; i++) {
       tempSpots.add(FlSpot(i.toDouble(), points[i].temperature));
       humiditySpots.add(FlSpot(i.toDouble(), points[i].humidity));
     }
 
     return LineChart(
       LineChartData(
-        titlesData: FlTitlesData(
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
+        titlesData: const FlTitlesData(
+          // On laisse les axes top, bottom et right vides ici
+          bottomTitles: AxisTitles(),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(showTitles: true, reservedSize: 40),
           ),
-          rightTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          topTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
+          rightTitles: AxisTitles(),
+          topTitles: AxisTitles(),
         ),
         lineBarsData: [
+          // Courbe rouge pour la température
           LineChartBarData(
             spots: tempSpots,
             isCurved: true,
             color: Colors.red,
-            barWidth: 2,
-            dotData: FlDotData(show: true),
-            belowBarData: BarAreaData(show: false),
+            belowBarData: BarAreaData(), // zone sous la courbe (invisible ici)
           ),
+          // Courbe bleue pour l’humidité
           LineChartBarData(
             spots: humiditySpots,
             isCurved: true,
             color: Colors.blue,
-            barWidth: 2,
-            dotData: FlDotData(show: true),
-            belowBarData: BarAreaData(show: false),
+            belowBarData: BarAreaData(),
           ),
         ],
-        gridData: FlGridData(show: true),
-        borderData: FlBorderData(show: true),
-        minY: 0,
-        maxY: 40,
+        borderData: FlBorderData(show: true), // Affiche les bords du graphe
+        minY: 0,  // Valeur minimale de l’axe Y
+        maxY: 40, // Valeur maximale de l’axe Y
+
+        // Interaction avec le graphique (tooltip)
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
             tooltipBgColor: Colors.grey.shade700,
-            getTooltipItems: (touchedSpots) {
-              return touchedSpots.map((spot) {
-                final isTemp = spot.bar.color == Colors.red;
-                final label = isTemp
-                    ? "Temp: ${spot.y.toStringAsFixed(1)} $unit"
-                    : "Hum: ${spot.y.toStringAsFixed(1)} %";
-                return LineTooltipItem(label, const TextStyle(color: Colors.white));
-              }).toList();
-            },
+            getTooltipItems: (touchedSpots) => touchedSpots.map((spot) {
+              final isTemp = spot.bar.color == Colors.red;
+              final label = isTemp
+                  ? "Temp: ${spot.y.toStringAsFixed(1)} $unit" // unité dynamique
+                  : "Hum: ${spot.y.toStringAsFixed(1)} %";
+              return LineTooltipItem(label, const TextStyle(color: Colors.white));
+            }).toList(),
           ),
         ),
       ),
