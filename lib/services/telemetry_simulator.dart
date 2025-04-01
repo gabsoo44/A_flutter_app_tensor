@@ -1,45 +1,57 @@
 import 'dart:async';
 import 'dart:math';
 
-// Cette classe simule un capteur qui génère périodiquement des données de température et d'humidité
+/// Simulates a sensor that periodically emits temperature and humidity readings.
+/// Each reading is generated independently based on configured time intervals,
+/// and emitted through a callback with placeholder `-1` when a value is not updated.
 class TelemetrySimulator {
-  // Fonction de rappel appelée à chaque nouvelle donnée générée
+  /// Callback function triggered when new data is available.
+  /// Called with (temperature, humidity) where either can be `-1` if not updated.
   final Function(double, double) onNewData;
 
-  // Fréquence d'envoi des données de température
+  /// Time interval between generated temperature values.
   final Duration tempInterval;
 
-  // Fréquence d'envoi des données d'humidité
+  /// Time interval between generated humidity values.
   final Duration humInterval;
 
+  // Timer responsible for periodic temperature generation
   Timer? _tempTimer;
+
+  // Timer responsible for periodic humidity generation
   Timer? _humTimer;
+
+  // Used to generate pseudo-random values for temperature and humidity
   final Random _random = Random();
 
+  /// Constructor that configures the simulator with its data emission intervals
   TelemetrySimulator({
     required this.onNewData,
     required this.tempInterval,
     required this.humInterval,
   });
 
-  // Démarre les deux timers : un pour la température, un pour l’humidité
+  /// Starts the simulation by launching two independent periodic timers:
+  /// - One for temperature updates
+  /// - One for humidity updates
   void start() {
     _tempTimer = Timer.periodic(tempInterval, (_) {
-      // Génère une température aléatoire entre 10.0 et 30.0 (précision 0.1)
+      // Generate a random temperature between 10.0 and 30.0 with 0.1 precision
       final temp = double.parse((10 + _random.nextDouble() * 20).toStringAsFixed(1));
-      // Appelle la fonction de rappel avec -1 pour l’humidité (non mise à jour ici)
+      // Trigger callback with updated temperature and placeholder for humidity
       onNewData(temp, -1);
     });
 
     _humTimer = Timer.periodic(humInterval, (_) {
-      // Génère une humidité aléatoire entre 10% et 30% (précision 0.1)
+      // Generate a random humidity between 10% and 30% with 0.1 precision
       final hum = double.parse((10 + _random.nextDouble() * 20).toStringAsFixed(1));
-      // Appelle la fonction de rappel avec -1 pour la température (non mise à jour ici)
+      // Trigger callback with placeholder for temperature and updated humidity
       onNewData(-1, hum);
     });
   }
 
-  // Arrête les deux timers
+  /// Stops both timers to halt data generation.
+  /// Should be called when the simulator is no longer needed to prevent leaks.
   void stop() {
     _tempTimer?.cancel();
     _humTimer?.cancel();

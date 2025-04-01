@@ -1,10 +1,11 @@
-// Import du modèle de données, du formulaire de saisie et du graphique
+// Import of the telemetry data model, input form widget, and telemetry chart widget
 import 'package:a_flutter_app_tensor/models/telemetry_point.dart';
 import 'package:a_flutter_app_tensor/widgets/data_input_form.dart';
 import 'package:a_flutter_app_tensor/widgets/telemetry_chart.dart';
 import 'package:flutter/material.dart';
 
-// Écran pour le mode manuel (saisie des données par l'utilisateur)
+/// Screen allowing users to manually input telemetry data (temperature and humidity).
+/// Used in manual mode to simulate sensor readings via user interaction.
 class ManualModeScreen extends StatefulWidget {
   const ManualModeScreen({super.key});
 
@@ -12,20 +13,24 @@ class ManualModeScreen extends StatefulWidget {
   State<ManualModeScreen> createState() => _ManualModeScreenState();
 }
 
+/// State class for ManualModeScreen.
+/// Manages manual telemetry point entry and chart updates.
 class _ManualModeScreenState extends State<ManualModeScreen> {
-  // Liste des points de télémétrie saisis manuellement
+  // List of telemetry points entered manually by the user
   final List<TelemetryPoint> _points = [];
 
-  // Fonction appelée lors de la soumission du formulaire
+  /// Called when the user submits the form with temperature and humidity values.
+  /// Adds a new telemetry point with the current timestamp and maintains a limited history.
   void _addPoint(double temperature, double humidity) {
     setState(() {
       _points.add(TelemetryPoint(
-        timestamp: DateTime.now(), // Date actuelle pour le point
+        // Use the current time as timestamp for manual entry
+        timestamp: DateTime.now(),
         temperature: temperature,
         humidity: humidity,
       ));
 
-      // On limite à 20 valeurs pour éviter d'alourdir le graphique
+      // Keep a maximum of 20 points to avoid overloading the chart
       if (_points.length > 20) {
         _points.removeAt(0);
       }
@@ -33,18 +38,20 @@ class _ManualModeScreenState extends State<ManualModeScreen> {
   }
 
   @override
+
+  /// Builds the UI for the manual mode screen: includes input form and data chart.
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: const Text('Mode Manuel')),
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              // Formulaire pour saisir température et humidité
+              // Widget that provides input fields for temperature and humidity
               DataInputForm(onSubmit: _addPoint),
 
               const SizedBox(height: 20),
 
-              // Graphique affichant les données saisies
+              // Chart widget that visualizes the manually entered telemetry data
               Expanded(child: TelemetryChart(points: _points)),
             ],
           ),
