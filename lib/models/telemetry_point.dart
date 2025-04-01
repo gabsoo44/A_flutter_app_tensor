@@ -1,15 +1,21 @@
-// Représente un point de données mesuré par le capteur à un instant donné
+/// Represents a single telemetry data point measured by the sensor at a specific moment in time.
+/// This class encapsulates both temperature and humidity values, along with their associated timestamp.
+/// It is typically used to store, display, or transmit environmental readings in monitoring systems.
 class TelemetryPoint {
-  // Moment où la donnée a été capturée
-  final DateTime timestamp;
+  /// Timestamp when the measurement was captured.
+  /// Used to order, analyze trends, or time-align with other data sources.
+  DateTime timestamp;
 
-  // Température relevée (en °C, par défaut)
-  final double temperature;
+  /// Measured temperature value, expected in degrees Celsius.
+  /// Can be used in threshold checks, graph plotting, or statistical analysis.
+  double temperature;
 
-  // Humidité relevée (en %)
-  final double humidity;
+  // Measured humidity percentage at the time of the reading.
+  // Useful for correlating environmental conditions or detecting anomalies.
+  double humidity;
 
-  // Constructeur de la classe : on a besoin des 3 infos pour créer un point
+  // Constructor requiring all fields to ensure the telemetry point is fully defined.
+  // Prevents incomplete data points which could break data integrity in storage or processing.
   TelemetryPoint({
     required this.timestamp,
     required this.temperature,

@@ -9,10 +9,15 @@
     ],
     "settings": {
         "editor.overviewRulerBorder": true,
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "dart.lineLength": 100,
         "editor.rulers": [
             100
         ],
-        "dart.lineLength": 100,
+        "markdown.extension.print.imgToBase64": true,
+        "editor.formatOnSave": true
+        
     },
     "extensions": {
         "recommendations": [

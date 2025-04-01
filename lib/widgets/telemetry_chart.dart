@@ -2,20 +2,30 @@ import 'package:a_flutter_app_tensor/models/telemetry_point.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-// Widget affichant un graphique des données de température et d’humidité
+/// Widget that displays a line chart with temperature and humidity data over time.
+/// Uses `fl_chart` to render smooth curves and tooltips based on the list of `TelemetryPoint` objects.
 class TelemetryChart extends StatelessWidget {
+  /// List of telemetry points to plot on the graph
   final List<TelemetryPoint> points;
+
+  /// Temperature unit used in tooltip labels (e.g., "°C", "°F")
   final String unit;
 
-  // Le graphique prend une liste de points de télémétrie et une unité de température à afficher
+  /// Requires a list of points and an optional temperature unit label
   const TelemetryChart({required this.points, this.unit = "°C", super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final tempSpots = <FlSpot>[];      // Points pour la courbe de température
-    final humiditySpots = <FlSpot>[];  // Points pour la courbe d’humidité
 
-    // On transforme chaque point de données en un FlSpot pour fl_chart
+  /// Builds the line chart with two curves: one for temperature, one for humidity.
+  /// Each curve uses a distinct color and displays a tooltip when touched.
+  Widget build(BuildContext context) {
+    // Spots for the temperature curve
+    final tempSpots = <FlSpot>[];
+
+    // Spots for the humidity curve
+    final humiditySpots = <FlSpot>[];
+
+    // Convert telemetry points into FlSpot instances with index-based X-axis
     for (var i = 0; i < points.length; i++) {
       tempSpots.add(FlSpot(i.toDouble(), points[i].temperature));
       humiditySpots.add(FlSpot(i.toDouble(), points[i].humidity));
@@ -23,8 +33,9 @@ class TelemetryChart extends StatelessWidget {
 
     return LineChart(
       LineChartData(
+        // Axis label configuration
         titlesData: const FlTitlesData(
-          // On laisse les axes top, bottom et right vides ici
+          // X-axis labels omitted
           bottomTitles: AxisTitles(),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(showTitles: true, reservedSize: 40),
@@ -32,15 +43,16 @@ class TelemetryChart extends StatelessWidget {
           rightTitles: AxisTitles(),
           topTitles: AxisTitles(),
         ),
+
+        // Two line series: red for temperature, blue for humidity
         lineBarsData: [
-          // Courbe rouge pour la température
           LineChartBarData(
             spots: tempSpots,
             isCurved: true,
             color: Colors.red,
-            belowBarData: BarAreaData(), // zone sous la courbe (invisible ici)
+            // Area under the curve (not shown)
+            belowBarData: BarAreaData(),
           ),
-          // Courbe bleue pour l’humidité
           LineChartBarData(
             spots: humiditySpots,
             isCurved: true,
@@ -48,18 +60,22 @@ class TelemetryChart extends StatelessWidget {
             belowBarData: BarAreaData(),
           ),
         ],
-        borderData: FlBorderData(show: true), // Affiche les bords du graphe
-        minY: 0,  // Valeur minimale de l’axe Y
-        maxY: 40, // Valeur maximale de l’axe Y
 
-        // Interaction avec le graphique (tooltip)
+        // Draw chart border
+        borderData: FlBorderData(show: true),
+
+        // Y-axis range
+        minY: 0,
+        maxY: 40,
+
+        // Interactive tooltip configuration
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
             tooltipBgColor: Colors.grey.shade700,
             getTooltipItems: (touchedSpots) => touchedSpots.map((spot) {
               final isTemp = spot.bar.color == Colors.red;
               final label = isTemp
-                  ? "Temp: ${spot.y.toStringAsFixed(1)} $unit" // unité dynamique
+                  ? "Temp: ${spot.y.toStringAsFixed(1)} $unit"
                   : "Hum: ${spot.y.toStringAsFixed(1)} %";
               return LineTooltipItem(label, const TextStyle(color: Colors.white));
             }).toList(),
