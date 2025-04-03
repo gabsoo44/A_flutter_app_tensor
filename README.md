@@ -1,34 +1,57 @@
-<!--
-SPDX-FileCopyrightText: 2025 Benoît Rolandeau <benoit.rolandeau@allcircuits.com>
+# Temperature & Humidity Sensor Simulation App
 
-SPDX-License-Identifier: MIT
--->
+This Flutter application simulates a temperature and humidity sensor system, allowing users to:
 
-# ESAIP Lessons App <!-- omit from toc -->
+- Manually input telemetry data
+- Simulate automatic data generation
+- Visualize data on a dynamic chart
+- Switch between active and sleep modes
 
-## Table of contents
+---
 
-- [Table of contents](#table-of-contents)
-- [Presentation](#presentation)
-- [Create your app](#create-your-app)
+## Project Structure
 
-## Presentation
+```text
+lib/
+├─ models/                 # Data models (e.g., TelemetryPoint)
+├─ services/              # Business logic (AutoModeService, ManualModeService, simulators)
+├─ screens/               # App screens (UI): Auto, Manual, Home
+├─ widgets/               # Reusable UI components (e.g., TelemetryChart)
+├─ constants/             # App-wide constants (durations, limits...)
+├─ router.dart            # GoRouter configuration
+├─ my_app.dart            # Root app configuration
+└─ main.dart              # App entry point
+```
 
-This is the base repository for your flutter applications.
+---
 
-## Create your app
+## Features
 
-When you create your flutter app, flutter will create a sub directory for your app.
+- 🧪 Manual mode with user-entered telemetry values
+- 🔄 Auto mode with simulated periodic data
+- 🧭 GoRouter-based navigation system
+- 📊 Real-time telemetry chart with fl_chart
+- ⚙️ Fake server polling for temperature unit
 
-You will have to copy/paste the content of this directory in the root of your repository.
+---
 
-In VS Code, the project will be created with all the system folders:
+## Next Steps (optional improvements)
 
-- android
-- ios
-- linux
-- macos
-- web
-- windows
+- ✅ Add unit/widget tests
+- 🌐 Replace FakeServer with real HTTP/WebSocket
+- 🧠 Introduce viewmodels or controllers for more scalable state
+- ☁️ Integrate cloud storage or database
 
-Remove the folders you don't need.
+---
+
+## Dependencies
+
+- `go_router`
+- `fl_chart`
+- `flutter` SDK
+
+---
+
+## Author
+
+Gabriel Guillore — 2025

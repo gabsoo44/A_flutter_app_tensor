@@ -1,51 +1,39 @@
-// Import of both screen options: manual mode and automatic mode
-import 'package:a_flutter_app_tensor/screens/auto_mode_screen.dart';
-import 'package:a_flutter_app_tensor/screens/manual_mode_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Home screen of the application.
-/// Provides access to manual and automatic telemetry modes via buttons.
+/// Provides access to manual and automatic telemetry modes via navigation buttons.
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-
-  /// Builds the UI for the home screen, presenting two buttons to navigate to different modes.
   Widget build(BuildContext context) => Scaffold(
-        // Application header with title
+        // AppBar with screen title
         appBar: AppBar(title: const Text('Mode de fonctionnement')),
 
-        // Vertically centered body content
+        // Centered body with two mode selection buttons
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Button to navigate to the manual input mode
+              // Button to navigate to the manual input mode via GoRouter
               ElevatedButton.icon(
                 icon: const Icon(Icons.edit),
                 label: const Text('Mode Manuel'),
-                onPressed: () async {
-                  // Navigate to the manual mode screen using push
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const ManualModeScreen()),
-                  );
+                onPressed: () {
+                  context.go('/manual');
                 },
               ),
 
               // Spacing between buttons
               const SizedBox(height: 20),
 
-              // Button to navigate to the automatic sensor simulation mode
+              // Button to navigate to the automatic sensor simulation mode via GoRouter
               ElevatedButton.icon(
                 icon: const Icon(Icons.auto_mode),
                 label: const Text('Mode Automatique'),
-                onPressed: () async {
-                  // Navigate to the automatic mode screen using push
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const AutoModeScreen()),
-                  );
+                onPressed: () {
+                  context.go('/auto');
                 },
               ),
             ],
