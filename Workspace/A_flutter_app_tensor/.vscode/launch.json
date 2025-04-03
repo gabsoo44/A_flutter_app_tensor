@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "A_flutter_app_tensor",
+            "cwd": "A_flutter_app_tensor",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "A_flutter_app_tensor (profile mode)",
+            "cwd": "A_flutter_app_tensor",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "A_flutter_app_tensor (release mode)",
+            "cwd": "A_flutter_app_tensor",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
