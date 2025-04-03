@@ -60,14 +60,14 @@ class _DataInputFormState extends State<DataInputForm> {
             TextFormField(
               controller: _tempController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Température (°C)'),
+              decoration: const InputDecoration(labelText: 'Temperature (°C)'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Entrez une température';
+                  return 'Enter a temperature';
                 }
                 final val = double.tryParse(value);
                 if (val == null || val < 0 || val > 40) {
-                  return 'Valeur invalide';
+                  return 'Invalid value';
                 }
                 return null;
               },
@@ -77,14 +77,14 @@ class _DataInputFormState extends State<DataInputForm> {
             TextFormField(
               controller: _humidityController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Humidité (%)'),
+              decoration: const InputDecoration(labelText: 'Humidity (%)'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Entrez une humidité';
+                  return 'Enter humidity';
                 }
                 final val = double.tryParse(value);
                 if (val == null || val < 0 || val > 40) {
-                  return 'Valeur invalide';
+                  return 'Invalid value';
                 }
                 return null;
               },
@@ -95,7 +95,7 @@ class _DataInputFormState extends State<DataInputForm> {
             // Button to submit the form
             ElevatedButton(
               onPressed: _submit,
-              child: const Text('Ajouter'),
+              child: const Text('Add'),
             )
           ],
         ),

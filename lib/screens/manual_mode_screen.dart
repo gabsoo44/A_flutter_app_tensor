@@ -1,11 +1,11 @@
-// Import of the telemetry data model, input form widget, and telemetry chart widget
 import 'package:a_flutter_app_tensor/models/telemetry_point.dart';
+import 'package:a_flutter_app_tensor/services/manual_mode_service.dart';
 import 'package:a_flutter_app_tensor/widgets/data_input_form.dart';
 import 'package:a_flutter_app_tensor/widgets/telemetry_chart.dart';
 import 'package:flutter/material.dart';
 
-/// Screen allowing users to manually input telemetry data (temperature and humidity).
-/// Used in manual mode to simulate sensor readings via user interaction.
+/// Manual mode screen allowing the user to enter temperature and humidity data.
+/// Uses ManualModeService to handle the logic and state updates.
 class ManualModeScreen extends StatefulWidget {
   const ManualModeScreen({super.key});
 
@@ -13,45 +13,36 @@ class ManualModeScreen extends StatefulWidget {
   State<ManualModeScreen> createState() => _ManualModeScreenState();
 }
 
-/// State class for ManualModeScreen.
-/// Manages manual telemetry point entry and chart updates.
 class _ManualModeScreenState extends State<ManualModeScreen> {
-  // List of telemetry points entered manually by the user
-  final List<TelemetryPoint> _points = [];
+  List<TelemetryPoint> _points = [];
+  late ManualModeService _service;
 
-  /// Called when the user submits the form with temperature and humidity values.
-  /// Adds a new telemetry point with the current timestamp and maintains a limited history.
-  void _addPoint(double temperature, double humidity) {
-    setState(() {
-      _points.add(TelemetryPoint(
-        // Use the current time as timestamp for manual entry
-        timestamp: DateTime.now(),
-        temperature: temperature,
-        humidity: humidity,
-      ));
-
-      // Keep a maximum of 20 points to avoid overloading the chart
-      if (_points.length > 20) {
-        _points.removeAt(0);
-      }
+  @override
+  void initState() {
+    super.initState();
+    _service = ManualModeService(onUpdate: (points) {
+      setState(() {
+        _points = points;
+      });
     });
   }
 
-  @override
+  /// Handles form submission and adds a new data point via the service
+  void _addPoint(double temperature, double humidity) {
+    _service.addPoint(temperature, humidity);
+  }
 
-  /// Builds the UI for the manual mode screen: includes input form and data chart.
+  @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Mode Manuel')),
+        appBar: AppBar(title: const Text('Manual Mode')),
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-              // Widget that provides input fields for temperature and humidity
+              // Form for temperature and humidity input
               DataInputForm(onSubmit: _addPoint),
-
               const SizedBox(height: 20),
-
-              // Chart widget that visualizes the manually entered telemetry data
+              // Telemetry chart displaying all submitted data points
               Expanded(child: TelemetryChart(points: _points)),
             ],
           ),
