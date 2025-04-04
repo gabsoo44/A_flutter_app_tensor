@@ -23,8 +23,7 @@ analyzer:
     missing_required_param: error
     missing_return: error
     missing_enum_constant_in_switch: error
-    document_ignores: ignore
-    public_member_api_docs: ignore
+    
 
   language:
     strict-casts: true
