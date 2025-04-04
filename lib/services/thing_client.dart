@@ -1,14 +1,12 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ThingClient {
   final String serverUrl = "http://172.16.144.22:4001";
   final String wsUrl = "ws://172.16.144.22:5001/ws";
 
   String thingId = "12345";
-  String apiKey = "3a30ec1cc520d234280cf5059e21a78c";
+  String apiKey = "4e404bd18ab5ca3f6a727464f9f51ea9";
 
   WebSocketChannel? channel;
   bool isSending = false;
