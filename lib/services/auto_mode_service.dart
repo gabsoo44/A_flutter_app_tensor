@@ -1,16 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:a_flutter_app_tensor/constants/constants.dart';
 import 'package:a_flutter_app_tensor/models/telemetry_point.dart';
 import 'package:a_flutter_app_tensor/services/fake_server.dart';
 import 'package:a_flutter_app_tensor/services/telemetry_simulator.dart';
-
+import 'package:a_flutter_app_tensor/services/thing_client.dart';  // Importation du client WebSocket
 /// Handles the logic for auto mode operation: telemetry simulation and server polling.
 class AutoModeService {
-  /// Callback to return a new TelemetryPoint to the UI
   final void Function(TelemetryPoint) onNewPoint;
-
-  /// Callback to update the unit shown in the UI
   final void Function(String) onUnitChanged;
 
   late TelemetrySimulator _simulator;
@@ -26,13 +24,12 @@ class AutoModeService {
     required this.onUnitChanged,
   });
 
-  /// Starts the simulator and server polling
   void start() {
     _startSimulator();
     _startPollingServer();
   }
 
-  /// Initializes the telemetry simulator with correct intervals
+  // Starts the telemetry simulator with correct intervals
   void _startSimulator() {
     _simulator = TelemetrySimulator(
       onNewData: _handleNewData,
@@ -42,7 +39,7 @@ class AutoModeService {
     _simulator.start();
   }
 
-  /// Polls the fake server to get current attributes (e.g. temperature unit)
+  // Polls the fake server to get current attributes (e.g. temperature unit)
   void _startPollingServer() {
     _pollingTimer?.cancel();
     final interval = isActiveMode ? kPollingIntervalActive : kPollingIntervalSleep;
@@ -52,7 +49,7 @@ class AutoModeService {
     });
   }
 
-  /// Processes new data from the simulator and emits valid points
+  // Processes new data from the simulator and emits valid points
   void _handleNewData(double temp, double hum) {
     if (temp != -1) {
       _lastTemp = temp;
@@ -68,11 +65,26 @@ class AutoModeService {
         humidity: _lastHum!,
       );
       onNewPoint(point);
+
+      // Sending telemetry data via WebSocket
+      _sendTelemetryData(point);
     }
   }
 
-  /// Toggles between active and sleep modes and restarts the service
-  // ignore: avoid_positional_boolean_parameters
+  // Send telemetry data through WebSocket (using ThingClient)
+  void _sendTelemetryData(TelemetryPoint point) {
+    final dataMessage = jsonEncode({
+      "thingId": ThingClient().thingId, // using the ThingClient to get the thingId
+      "temperature": point.temperature,
+      "humidity": point.humidity,
+      "timestamp": point.timestamp.toIso8601String(),
+    });
+
+    ThingClient().channel?.sink.add(dataMessage); // Send data via WebSocket
+    print("📤 Données envoyées via WebSocket : $dataMessage");
+  }
+
+  // Toggles between active and sleep modes and restarts the service
   void toggleMode(bool active) {
     isActiveMode = active;
     _simulator.stop();
@@ -80,7 +92,7 @@ class AutoModeService {
     start();
   }
 
-  /// Stops all background processes
+  // Stops all background processes
   void dispose() {
     _simulator.stop();
     _pollingTimer?.cancel();
