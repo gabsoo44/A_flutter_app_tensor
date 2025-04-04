@@ -1,5 +1,3 @@
-// 📁 lib/screens/auto_mode_screen.dart
-
 import 'package:a_flutter_app_tensor/constants/constants.dart';
 import 'package:a_flutter_app_tensor/models/telemetry_point.dart';
 import 'package:a_flutter_app_tensor/services/auto_mode_service.dart';
