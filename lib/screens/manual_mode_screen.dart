@@ -1,5 +1,6 @@
 import 'package:a_flutter_app_tensor/models/telemetry_point.dart';
 import 'package:a_flutter_app_tensor/services/manual_mode_service.dart';
+import 'package:a_flutter_app_tensor/services/thing_client.dart';
 import 'package:a_flutter_app_tensor/widgets/data_input_form.dart';
 import 'package:a_flutter_app_tensor/widgets/telemetry_chart.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,9 @@ import 'package:flutter/material.dart';
 /// Manual mode screen allowing the user to enter temperature and humidity data.
 /// Uses ManualModeService to handle the logic and state updates.
 class ManualModeScreen extends StatefulWidget {
-  const ManualModeScreen({super.key});
+  final ThingClient thingClient;
+
+  const ManualModeScreen({super.key, required this.thingClient});
 
   @override
   State<ManualModeScreen> createState() => _ManualModeScreenState();

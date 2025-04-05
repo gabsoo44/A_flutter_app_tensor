@@ -1,9 +1,7 @@
-import 'package:a_flutter_app_tensor/screens/home_screen.dart';
-import 'package:a_flutter_app_tensor/services/thing_client.dart';  // Importer le client WebSocket
+import 'package:a_flutter_app_tensor/router.dart';
+import 'package:a_flutter_app_tensor/services/thing_client.dart';
 import 'package:flutter/material.dart';
 
-/// Root widget of the application.
-/// Initializes and runs the app by injecting the root widget `MyApp`.
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -12,26 +10,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late ThingClient _thingClient;  // Déclarer le client WebSocket
+  late ThingClient _thingClient;
 
   @override
   void initState() {
     super.initState();
-    _thingClient = ThingClient();  // Initialiser le client WebSocket
-    _thingClient.connectToWebSocket();  // Connexion WebSocket
+    _thingClient = ThingClient();
+    _thingClient.connectToWebSocket('ws://192.168.1.156:5001');
   }
 
   @override
   void dispose() {
+    _thingClient.closeConnection();
     super.dispose();
-    _thingClient.closeConnection();  // Fermer la connexion WebSocket proprement à la fermeture de l'application
   }
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,  // Désactiver le banner de debug
-        title: 'Capteur Température',
-        theme: ThemeData(primarySwatch: Colors.blue),
-        home: const HomeScreen(),  // Première page qui sera affichée
-      );
+  Widget build(BuildContext context) => MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      title: 'Capteur Température',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      routerConfig: appRouter, // <-- C'est ici qu'on active GoRouter
+    );
 }
