@@ -1,30 +1,28 @@
 import 'package:a_flutter_app_tensor/screens/auto_mode_screen.dart';
 import 'package:a_flutter_app_tensor/screens/home_screen.dart';
 import 'package:a_flutter_app_tensor/screens/manual_mode_screen.dart';
+import 'package:a_flutter_app_tensor/services/thing_client.dart';
 import 'package:go_router/go_router.dart';
 
-/// Global router configuration using GoRouter.
-/// Defines routes for navigating between Home, Auto, and Manual screens.
+final thingClient = ThingClient()..connectToWebSocket('ws://10.51.116.67:5001');
+
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/', // Default route
+  initialLocation: '/',
   routes: [
-    // Route to home screen
     GoRoute(
       path: '/',
       name: 'home',
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => HomeScreen(thingClient: thingClient),
     ),
-    // Route to auto mode screen
     GoRoute(
       path: '/auto',
       name: 'auto',
-      builder: (context, state) => const AutoModeScreen(),
+      builder: (context, state) => AutoModeScreen(thingClient: thingClient), // ✅
     ),
-    // Route to manual mode screen
     GoRoute(
       path: '/manual',
       name: 'manual',
-      builder: (context, state) => const ManualModeScreen(),
+      builder: (context, state) => ManualModeScreen(thingClient: thingClient), // ✅
     ),
   ],
 );

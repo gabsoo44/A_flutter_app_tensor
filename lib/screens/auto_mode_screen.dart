@@ -1,14 +1,14 @@
 import 'package:a_flutter_app_tensor/constants/constants.dart';
 import 'package:a_flutter_app_tensor/models/telemetry_point.dart';
 import 'package:a_flutter_app_tensor/services/auto_mode_service.dart';
+import 'package:a_flutter_app_tensor/services/thing_client.dart';
 import 'package:a_flutter_app_tensor/widgets/telemetry_chart.dart';
 import 'package:flutter/material.dart';
 
-/// AutoModeScreen simulates a sensor's automatic behavior.
-/// It displays a real-time chart of telemetry data (temperature & humidity),
-/// and allows switching between Active and Sleep modes, each with different update intervals.
 class AutoModeScreen extends StatefulWidget {
-  const AutoModeScreen({super.key});
+  final ThingClient thingClient;
+
+  const AutoModeScreen({super.key, required this.thingClient});
 
   @override
   State<AutoModeScreen> createState() => _AutoModeScreenState();
@@ -22,14 +22,15 @@ class _AutoModeScreenState extends State<AutoModeScreen> {
   @override
   void initState() {
     super.initState();
+    print("AutoModeScreen ouvert !");
     _service = AutoModeService(
       onNewPoint: _addPoint,
       onUnitChanged: _updateUnit,
+      thingClient: widget.thingClient, 
     );
     _service.start();
   }
 
-  /// Adds a new telemetry point to the chart
   void _addPoint(TelemetryPoint point) {
     setState(() {
       _points.add(point);
@@ -39,14 +40,12 @@ class _AutoModeScreenState extends State<AutoModeScreen> {
     });
   }
 
-  /// Updates the temperature unit from the server
   void _updateUnit(String unit) {
     setState(() {
       _unit = unit;
     });
   }
 
-  /// Toggles between active and sleep modes
   void _toggleMode(bool value) {
     setState(() {
       _service.toggleMode(value);

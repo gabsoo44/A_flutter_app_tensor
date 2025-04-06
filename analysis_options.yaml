@@ -24,6 +24,7 @@ analyzer:
     missing_return: error
     missing_enum_constant_in_switch: error
     
+    
 
   language:
     strict-casts: true
