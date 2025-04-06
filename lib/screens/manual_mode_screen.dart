@@ -5,9 +5,11 @@ import 'package:a_flutter_app_tensor/widgets/data_input_form.dart';
 import 'package:a_flutter_app_tensor/widgets/telemetry_chart.dart';
 import 'package:flutter/material.dart';
 
-/// Manual mode screen allowing the user to enter temperature and humidity data.
-/// Uses ManualModeService to handle the logic and state updates.
+/// ManualModeScreen provides a user interface for entering temperature
+/// and humidity values manually. These values are plotted and sent
+/// through the ManualModeService.
 class ManualModeScreen extends StatefulWidget {
+  /// Reference to the WebSocket client used across the app
   final ThingClient thingClient;
 
   const ManualModeScreen({super.key, required this.thingClient});
@@ -17,20 +19,25 @@ class ManualModeScreen extends StatefulWidget {
 }
 
 class _ManualModeScreenState extends State<ManualModeScreen> {
+  /// List of all telemetry points entered manually
   List<TelemetryPoint> _points = [];
+
+  /// Service to handle the logic of storing and updating telemetry points
   late ManualModeService _service;
 
   @override
   void initState() {
     super.initState();
+
+    // Initialize service and register update callback
     _service = ManualModeService(onUpdate: (points) {
       setState(() {
-        _points = points;
+        _points = points; // Update local state when service updates data
       });
     });
   }
 
-  /// Handles form submission and adds a new data point via the service
+  /// Handles user submission by delegating to the service
   void _addPoint(double temperature, double humidity) {
     _service.addPoint(temperature, humidity);
   }
@@ -44,8 +51,10 @@ class _ManualModeScreenState extends State<ManualModeScreen> {
             children: [
               // Form for temperature and humidity input
               DataInputForm(onSubmit: _addPoint),
+
               const SizedBox(height: 20),
-              // Telemetry chart displaying all submitted data points
+
+              // Chart displaying submitted telemetry data points
               Expanded(child: TelemetryChart(points: _points)),
             ],
           ),
