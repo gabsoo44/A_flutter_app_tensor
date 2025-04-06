@@ -22,11 +22,11 @@ class _AutoModeScreenState extends State<AutoModeScreen> {
   @override
   void initState() {
     super.initState();
-    print("✅ AutoModeScreen ouvert !");
+    print("AutoModeScreen ouvert !");
     _service = AutoModeService(
       onNewPoint: _addPoint,
       onUnitChanged: _updateUnit,
-      thingClient: widget.thingClient, // injecte ici
+      thingClient: widget.thingClient, 
     );
     _service.start();
   }

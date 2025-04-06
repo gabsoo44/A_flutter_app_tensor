@@ -1,32 +1,49 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ThingClient {
-  final String thingId = "flutter_app_tensor_01"; 
-  WebSocket? _socket;
+  final String thingId = "flutter_app_tensor_01";
+  WebSocketChannel? _channel;
   final StreamController<String> _controller = StreamController.broadcast();
 
   Stream<String> get messages => _controller.stream;
 
-  // ignore: public_member_api_docs
   Future<void> connectToWebSocket(String url) async {
-    _socket = await WebSocket.connect(url);
-    _socket!.listen(
-      (msg) => _controller.add(msg as String),
-      onError: (err) => print("Erreur WebSocket : $err"),
-      onDone: () => print('Connexion WebSocket fermée'),
-    );
+    print("Tentative de connexion à $url...");
+    try {
+      _channel = WebSocketChannel.connect(Uri.parse(url));
+      print("Connexion WebSocket réussie");
+
+      _channel!.stream.listen(
+        (msg) {
+          print("Reçu du serveur : $msg");
+          _controller.add(msg as String);
+        },
+        onError: (err) {
+          print("Erreur WebSocket : $err");
+        },
+        onDone: () {
+          print("Connexion WebSocket fermée");
+        },
+      );
+    } catch (e) {
+      print("Impossible de se connecter au WebSocket : $e");
+    }
   }
 
-
   void sendMessage(String msg) {
-    _socket?.add(msg);
+    if (isConnected) {
+      _channel?.sink.add(msg);
+      print("📤Message envoyé : $msg");
+    } else {
+      print("Socket non connectée. Impossible d'envoyer le message.");
+    }
   }
 
   void closeConnection() {
-    _socket?.close();
+    _channel?.sink.close();
     _controller.close();
   }
 
-  bool get isConnected => _socket != null;
+  bool get isConnected => _channel != null;
 }

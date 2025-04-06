@@ -4,7 +4,7 @@ import 'package:a_flutter_app_tensor/screens/manual_mode_screen.dart';
 import 'package:a_flutter_app_tensor/services/thing_client.dart';
 import 'package:go_router/go_router.dart';
 
-final thingClient = ThingClient()..connectToWebSocket('ws://192.168.1.156:5001');
+final thingClient = ThingClient()..connectToWebSocket('ws://10.51.116.67:5001');
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',

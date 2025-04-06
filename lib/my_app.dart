@@ -16,7 +16,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _thingClient = ThingClient();
-    _thingClient.connectToWebSocket('ws://192.168.1.156:5001');
+    _thingClient.connectToWebSocket('ws://10.51.116.67:5001');
   }
 
   @override
